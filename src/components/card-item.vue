@@ -8,26 +8,28 @@
     <div class="favicon"><img :src="mark.favicon" alt=""></div>
     {{ mark.title }}
   </el-button>
-  <el-dialog title="收货地址" :visible.sync="isShowAddMark">
-    <el-form :model="form">
-      <el-form-item label="标题" :label-width="formLabelWidth">
+
+  <!-- add mark dialog -->
+  <el-dialog title="添加标签" :visible.sync="isShowAddMark">
+    <el-form :model="form" :rules="rules" ref="ADD_MARK_FORM" :label-width="formLabelWidth">
+      <el-form-item label="标题" prop="title">
         <el-input v-model="form.title" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="图标" :label-width="formLabelWidth">
+      <el-form-item label="图标" prop="favicon">
         <el-input v-model="form.favicon" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="链接地址" :label-width="formLabelWidth">
+      <el-form-item label="链接地址" prop="target">
         <el-input v-model="form.target" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="面板" :label-width="formLabelWidth">
-        <el-select class="el-select-card" v-model="form.card" placeholder="请选择活动区域">
+      <el-form-item label="面板" prop="card">
+        <el-select class="el-select-card" v-model="form.card" placeholder="请选择所属面板">
           <el-option v-for="(card, index) in cards" :key="index" :label="card.title" :value="card.objectId"></el-option>
         </el-select>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="isShowAddMark = false">取 消</el-button>
-      <el-button type="primary" @click="isShowAddMark = false">确 定</el-button>
+      <el-button @click="resetFields">重 置</el-button>
+      <el-button type="primary" @click="addMark">确 定</el-button>
     </div>
   </el-dialog>
 </el-card>
@@ -36,12 +38,40 @@
 <script>
 import { mapState } from 'vuex';
 
+function checkURL(rule, value, callback) {
+  if (!value) {
+    return callback(new Error('链接地址不能为空'));
+  }
+
+  const URLPattern = /^https?:\/\//;
+  if (!URLPattern.test(value)) {
+    return callback(new Error('链接地址格式为http://或者https://'));
+  }
+  return callback();
+}
+
 export default {
   data() {
     return {
       form: '',
       formLabelWidth: '120px',
       isShowAddMark: false,
+      rules: {
+        title: [
+          { required: true, message: '请输入标签名称', trigger: 'blur' }
+        ],
+        favicon: [
+          { required: true, message: '请输入图标地址', trigger: 'blur' },
+          { validator: checkURL, trigger: 'blur' },
+        ],
+        target: [
+          { required: true, message: '请输入链接地址', trigger: 'blur' },
+          { validator: checkURL, trigger: 'blur' },
+        ],
+        card: [
+          { required: true, message: '请选择面板名称', trigger: 'blur' }
+        ],
+      },
     };
   },
   props: {
@@ -59,10 +89,47 @@ export default {
   },
   methods: {
     redirect(mark) {
-      // window.location.href = mark.target;
       window.open(mark.target);
-    }
+    },
+    async addMark() {
+      try {
+        await this.$refs.ADD_MARK_FORM.validate();
+      } catch (error) {
+        return this.$notify.error({
+          title: '错误',
+          message: '字段不能为空',
+        });
+      }
+
+      let result;
+      try {
+        result = await this.$store.dispatch('ACTION_ADD_MARK', { ...this.form });
+      } catch (error) {
+        return this.$notify.error({
+          title: '错误',
+          message: '新建标签失败',
+        });
+      }
+
+      console.log(result);
+      this.card.marks.push(result);
+      this.$notify.success({
+        title: '成功',
+        message: '新建标签成功',
+      });
+
+      this.isShowAddMark = false;
+      this.resetFields();
+    },
+    resetFields() {
+      this.$refs.ADD_MARK_FORM.resetFields();
+    },
   },
+  mounted() {
+    this.form = {
+      card: this.card.objectId,
+    };
+  }
 };
 </script>
 

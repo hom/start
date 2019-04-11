@@ -34,6 +34,31 @@ export default new Vuex.Store({
       console.log(results.data);
       commit('SET_CARDS', results.data.data);
     },
+    
+    async ACTION_ADD_MARK({ commit }, mark) {
+      console.log("TCL: ACTION_ADD_MARK -> mark", mark)
+      let card = {
+        objectId: mark.card,
+        className: 'Card',
+        __type: 'Pointer'
+      };
+
+      mark.card = card;
+
+      let result;
+      try {
+        result = await Axios.post('http://start.pongj.com/api/mark', mark, {
+          headers: {
+            'X-Parse-Application-Id': '49WFxt4BxWWrCaKCPcHikcwcCLPTiVUc',
+            'X-Parse-JavaScript-Key': '6DDPazgcjh6HaVJ2NJpXDLpPWPYuqpNf',
+          },
+        })
+      } catch (error) {
+        return new Error(error.response.data);
+      }
+
+      return result.data.data;
+    }
     // async ACTION_FETCH_ITEMS({ commit }, objectId) {
     //   let results;
     //   try {

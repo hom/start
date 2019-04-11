@@ -16,6 +16,7 @@ module.exports = {
     'no-console': 'off',
     'no-plusplus ': 'off',
     'arrow-parens': 'off',
+    'consistent-return': 'off',
   },
   parserOptions: {
     parser: 'babel-eslint',
