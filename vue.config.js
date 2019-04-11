@@ -5,7 +5,7 @@ module.exports = {
       vuex: 'Vuex',
       axios: 'axios',
       moment: 'moment',
-      'element-ui': 'ElementUI',
+      'element-ui': 'ELEMENT',
     }
   }
 }
