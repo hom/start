@@ -140,8 +140,8 @@ export default {
   }
 
   .favicon {
-    width: 17px;
-    height: 17px;
+    width: 14px;
+    height: 14px;
     display: inline-block;
     vertical-align: text-bottom;
     img {
