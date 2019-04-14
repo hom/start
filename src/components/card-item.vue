@@ -10,7 +10,7 @@
   </el-button>
 
   <!-- add mark dialog -->
-  <el-dialog title="添加标签" :visible.sync="isShowAddMark">
+  <el-dialog title="添加标签" :visible.sync="isShowAddMark" @close="resetFields">
     <el-form :model="form" :rules="rules" ref="ADD_MARK_FORM" :label-width="formLabelWidth">
       <el-form-item label="标题" prop="title">
         <el-input v-model="form.title" autocomplete="off"></el-input>

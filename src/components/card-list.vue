@@ -1,12 +1,14 @@
 <template>
   <el-main class="card-list">
     <CardItem v-for="(card, key) of cards" :key="key" :card="card" />
+    <AddCard />
   </el-main>
 </template>
 
 <script>
 import { mapState } from 'vuex';
 import CardItem from './card-item.vue';
+import AddCard from './add-card.vue';
 
 export default {
   data() {
@@ -14,6 +16,7 @@ export default {
   },
   components: {
     CardItem,
+    AddCard,
   },
   computed: {
     ...mapState({

@@ -1,27 +1,83 @@
 <template>
-  <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
-    <el-form :model="form">
-      <el-form-item label="活动名称" :label-width="formLabelWidth">
-        <el-input v-model="form.name" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item label="活动区域" :label-width="formLabelWidth">
-        <el-select v-model="form.region" placeholder="请选择活动区域">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
-        </el-select>
-      </el-form-item>
-    </el-form>
-    <div slot="footer" class="dialog-footer">
-      <el-button @click="dialogFormVisible = false">取 消</el-button>
-      <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-    </div>
-  </el-dialog>
+  <section class="add-card">
+    <el-button class="add-button" plain @click="isShowAddCard = true"><i class="el-icon-plus"></i></el-button>
+    <el-dialog title="添加面板" :visible.sync="isShowAddCard" @close="resetFields">
+      <el-form :model="form" :rules="rules" ref="ADD_CARD_FORM" :label-width="formLabelWidth">
+        <el-form-item label="标题" prop="title">
+          <el-input v-model="form.title" autofocus autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="resetFields">重 置</el-button>
+        <el-button type="primary" @click="addCard">确 定</el-button>
+      </div>
+    </el-dialog>
+  </section>
 </template>
 
 <script>
 export default {
   data() {
-    return {};
+    return {
+      isShowAddCard: false,
+      form: {},
+      formLabelWidth: '120px',
+      rules: {
+        title: [
+          { required: true, message: '请输入标签名称', trigger: 'blur' }
+        ],
+      },
+    };
   },
+  methods: {
+    async addCard() {
+      try {
+        await this.$refs.ADD_CARD_FORM.validate();
+      } catch (error) {
+        return this.$notify.error({
+          title: '错误',
+          message: '字段不能为空',
+        });
+      }
+
+      let result;
+      try {
+        result = await this.$store.dispatch('ACTION_ADD_CARD', { ...this.form });
+      } catch (error) {
+        return this.$notify.error({
+          title: '错误',
+          message: '新建面板失败',
+        });
+      }
+
+      console.log(result);
+      this.$notify.success({
+        title: '成功',
+        message: '新建面板成功',
+      });
+
+      this.isShowAddCard = false;
+    },
+    resetFields() {
+      console.log('reset fields');
+      this.$refs.ADD_CARD_FORM.resetFields();
+    },
+  }
 }
 </script>
+
+<style lang="scss" scoped>
+.add-card {
+  width: 100%;
+  justify-self: center;
+  align-self: center;
+}
+.add-button {
+  font-size: 32px;
+  // border: none;
+  display: inline-block;
+  &:hover {
+    transform: rotate(0.5turn);
+  }
+}
+</style>

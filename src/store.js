@@ -31,10 +31,29 @@ export default new Vuex.Store({
       } catch (error) {
         return console.error(error.response.data.error);
       }
-      console.log(results.data);
+
       commit('SET_CARDS', results.data.data);
     },
     
+    async ACTION_ADD_CARD({ state, commit }, card) {
+      let result;
+      try {
+        result = await Axios.post('http://start.pongj.com/api/card', card, {
+          headers: {
+            'X-Parse-Application-Id': '49WFxt4BxWWrCaKCPcHikcwcCLPTiVUc',
+            'X-Parse-JavaScript-Key': '6DDPazgcjh6HaVJ2NJpXDLpPWPYuqpNf',
+          },
+        })
+      } catch (error) {
+        return new Error(error.response.data);
+      }
+
+      let cards = state.cards;
+      cards.push(result.data.data);
+      commit('SET_CARDS', cards);
+      return result.data.data;
+    },
+
     async ACTION_ADD_MARK({ commit }, mark) {
       console.log("TCL: ACTION_ADD_MARK -> mark", mark)
       let card = {
