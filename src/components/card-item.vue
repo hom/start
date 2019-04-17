@@ -15,7 +15,10 @@
       <el-form-item label="标题" prop="title">
         <el-input v-model="form.title" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="图标" prop="favicon">
+      <el-form-item label="图标名称" prop="name">
+        <el-input v-model="form.favicon" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item label="图标链接" prop="url">
         <el-input v-model="form.favicon" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="链接地址" prop="target">
@@ -60,10 +63,13 @@ export default {
         title: [
           { required: true, message: '请输入标签名称', trigger: 'blur' }
         ],
-        favicon: [
-          { required: true, message: '请输入图标地址', trigger: 'blur' },
-          { validator: checkURL, trigger: 'blur' },
+        name: [
+          { required: true, message: '图标名称不能为空', trigger: 'blur' }
         ],
+        // url: [
+        //   { required: true, message: '请输入图标地址', trigger: 'blur' },
+        //   { validator: checkURL, trigger: 'blur' },
+        // ],
         target: [
           { required: true, message: '请输入链接地址', trigger: 'blur' },
           { validator: checkURL, trigger: 'blur' },
