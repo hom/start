@@ -16,10 +16,10 @@
         <el-input v-model="form.title" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="图标名称" prop="name">
-        <el-input v-model="form.favicon" autocomplete="off"></el-input>
+        <el-input v-model="form.name" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="图标链接" prop="url">
-        <el-input v-model="form.favicon" autocomplete="off"></el-input>
+        <el-input v-model="form.url" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="链接地址" prop="target">
         <el-input v-model="form.target" autocomplete="off"></el-input>
