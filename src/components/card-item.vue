@@ -66,10 +66,6 @@ export default {
         name: [
           { required: true, message: '图标名称不能为空', trigger: 'blur' }
         ],
-        // url: [
-        //   { required: true, message: '请输入图标地址', trigger: 'blur' },
-        //   { validator: checkURL, trigger: 'blur' },
-        // ],
         target: [
           { required: true, message: '请输入链接地址', trigger: 'blur' },
           { validator: checkURL, trigger: 'blur' },
@@ -184,7 +180,4 @@ export default {
     min-height: 60px;
   }
 
-  .el-select-card {
-    float: left;
-  }
 </style>

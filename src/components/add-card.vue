@@ -71,6 +71,7 @@ export default {
   width: 100%;
   justify-self: center;
   align-self: center;
+  text-align: center;
 }
 .add-button {
   font-size: 32px;
