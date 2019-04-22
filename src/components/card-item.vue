@@ -2,7 +2,19 @@
   <el-card class="box-card">
   <div slot="header" class="clearfix">
     <span>{{ card.title }}</span>
-    <el-button style="float: right; padding: 3px 0" type="text" @click="isShowAddMark = true">添加</el-button>
+    <!-- <el-button style="float: right; padding: 3px 0" type="text" @click="isShowAddMark = true">添加</el-button> -->
+    <el-dropdown style="float: right" trigger="click">
+      <span class="el-dropdown-link">
+        下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
+      </span>
+      <el-dropdown-menu slot="dropdown">
+        <el-dropdown-item icon="el-icon-plus">黄金糕</el-dropdown-item>
+        <el-dropdown-item icon="el-icon-circle-plus">狮子头</el-dropdown-item>
+        <el-dropdown-item icon="el-icon-circle-plus-outline">螺蛳粉</el-dropdown-item>
+        <el-dropdown-item icon="el-icon-check">双皮奶</el-dropdown-item>
+        <el-dropdown-item icon="el-icon-circle-check-outline">蚵仔煎</el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown>
   </div>
   <el-button @click="redirect(mark)" class="item-button" v-for="(mark, index) in card.marks" :key="index" round>
     <div class="favicon"><img :src="mark.favicon" alt=""></div>
@@ -164,6 +176,11 @@ export default {
 
   .item-button {
     margin-bottom: 18px;
+  }
+
+  .clearfix {
+    margin-top: -5px;
+    margin-bottom: -5px;
   }
 
   .clearfix:before,
