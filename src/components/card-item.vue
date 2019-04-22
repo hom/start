@@ -3,16 +3,13 @@
   <div slot="header" class="clearfix">
     <span>{{ card.title }}</span>
     <!-- <el-button style="float: right; padding: 3px 0" type="text" @click="isShowAddMark = true">添加</el-button> -->
-    <el-dropdown style="float: right" trigger="click">
+    <el-dropdown style="float: right" trigger="click" @command="handleCommand">
       <span class="el-dropdown-link">
-        下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
+        编辑<i class="el-icon-arrow-down el-icon--right"></i>
       </span>
       <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item icon="el-icon-plus">黄金糕</el-dropdown-item>
-        <el-dropdown-item icon="el-icon-circle-plus">狮子头</el-dropdown-item>
-        <el-dropdown-item icon="el-icon-circle-plus-outline">螺蛳粉</el-dropdown-item>
-        <el-dropdown-item icon="el-icon-check">双皮奶</el-dropdown-item>
-        <el-dropdown-item icon="el-icon-circle-check-outline">蚵仔煎</el-dropdown-item>
+        <el-dropdown-item icon="el-icon-plus" command="ADD_MARK">添加</el-dropdown-item>
+        <el-dropdown-item icon="el-icon-edit-outline" command="EDIT_MARK">编辑</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
   </div>
@@ -105,6 +102,14 @@ export default {
     redirect(mark) {
       window.open(mark.target);
     },
+
+    handleCommand(command) {
+      console.log(command);
+      if (command === 'ADD_MARK') {
+        this.isShowAddMark = true;
+      }
+    },
+
     async addMark() {
       try {
         await this.$refs.ADD_MARK_FORM.validate();
