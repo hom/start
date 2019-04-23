@@ -202,4 +202,8 @@ export default {
     min-height: 60px;
   }
 
+  .el-dropdown-link:hover {
+    cursor: pointer;
+  }
+
 </style>
