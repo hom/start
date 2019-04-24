@@ -5,7 +5,6 @@ import Axios from 'axios';
 
 const axios = Axios.create({
   baseURL: process.env.VUE_APP_BASE_URL,
-  timeout: 1000,
   headers: {
     'X-Parse-Application-Id': process.env.VUE_APP_PARSE_APPID,
     'X-Parse-JavaScript-Key': process.env.VUE_APP_PARSE_JAVASCRIPT_KEY
