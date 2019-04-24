@@ -167,7 +167,7 @@ export default {
 
     async handleDeleteMark(index, mark) {
       try {
-        await this.$confirm('此操作将永久删除该标签, 是否继续?', '提示', {
+        await this.$confirm(`此操作将永久删除${mark.title}, 是否继续?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -250,7 +250,7 @@ export default {
 
     async handleDeleteCard() {
       try {
-        await this.$confirm('此操作将永久删除该列表, 是否继续?', '提示', {
+        await this.$confirm(`此操作将永久删除${this.card.title}, 是否继续?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'

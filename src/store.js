@@ -3,6 +3,21 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import Axios from 'axios';
 
+console.log(process.env.VUE_APP_BASE_URL);
+console.log(process.env.VUE_APP_PARSE_APPID);
+console.log(process.env.VUE_APP_PARSE_JAVASCRIPT_KEY)
+
+const axios = Axios.create({
+  baseURL: process.env.VUE_APP_BASE_URL,
+  timeout: 1000,
+  headers: {
+    'X-Parse-Application-Id': process.env.VUE_APP_PARSE_APPID,
+    'X-Parse-JavaScript-Key': process.env.VUE_APP_PARSE_JAVASCRIPT_KEY
+  }
+});
+
+console.log(axios);
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -22,13 +37,9 @@ export default new Vuex.Store({
     async ACTION_FETCH_CARDS({ commit }) {
       let results;
       try {
-        results = await Axios.get('http://start.pongj.com/api/cards', {
-          headers: {
-            'X-Parse-Application-Id': '49WFxt4BxWWrCaKCPcHikcwcCLPTiVUc',
-            'X-Parse-JavaScript-Key': '6DDPazgcjh6HaVJ2NJpXDLpPWPYuqpNf'
-          }
-        })
+        results = await axios.get('/api/cards')
       } catch (error) {
+        console.error(error);
         return console.error(error.response.data.error);
       }
 
@@ -38,12 +49,7 @@ export default new Vuex.Store({
     async ACTION_ADD_CARD({ state, commit }, card) {
       let result;
       try {
-        result = await Axios.post('http://start.pongj.com/api/card', card, {
-          headers: {
-            'X-Parse-Application-Id': '49WFxt4BxWWrCaKCPcHikcwcCLPTiVUc',
-            'X-Parse-JavaScript-Key': '6DDPazgcjh6HaVJ2NJpXDLpPWPYuqpNf',
-          },
-        })
+        result = await axios.post('/api/card', card)
       } catch (error) {
         return new Error(error.response.data);
       }
@@ -66,13 +72,9 @@ export default new Vuex.Store({
 
       let result;
       try {
-        result = await Axios.post('http://start.pongj.com/api/mark', mark, {
-          headers: {
-            'X-Parse-Application-Id': '49WFxt4BxWWrCaKCPcHikcwcCLPTiVUc',
-            'X-Parse-JavaScript-Key': '6DDPazgcjh6HaVJ2NJpXDLpPWPYuqpNf',
-          },
-        })
+        result = await axios.post('/api/mark', mark)
       } catch (error) {
+        console.error(error);
         return new Error(error.response.data);
       }
 
@@ -82,13 +84,9 @@ export default new Vuex.Store({
     async ACTION_DELETE_MARK({ commit }, mark) {
       let result;
       try {
-        result = await Axios.delete(`http://start.pongj.com/parse/classes/Mark/${mark.objectId}`, {
-          headers: {
-            'X-Parse-Application-Id': '49WFxt4BxWWrCaKCPcHikcwcCLPTiVUc',
-            'X-Parse-JavaScript-Key': '6DDPazgcjh6HaVJ2NJpXDLpPWPYuqpNf',
-          },
-        })
+        result = await axios.delete(`/parse/classes/Mark/${mark.objectId}`)
       } catch (error) {
+        console.error(error);
         return new Error(error.response.data);
       }
 
@@ -98,12 +96,7 @@ export default new Vuex.Store({
     async ACTION_EDIT_CARD({ commit }, { objectId, title }) {
       let result;
       try {
-        result = await Axios.put(`http://start.pongj.com/parse/classes/Card/${objectId}`, { title }, {
-          headers: {
-            'X-Parse-Application-Id': '49WFxt4BxWWrCaKCPcHikcwcCLPTiVUc',
-            'X-Parse-JavaScript-Key': '6DDPazgcjh6HaVJ2NJpXDLpPWPYuqpNf',
-          },
-        })
+        result = await axios.put(`/parse/classes/Card/${objectId}`, { title })
       } catch (error) {
         return new Error(error.response.data);
       }
@@ -114,12 +107,7 @@ export default new Vuex.Store({
     async ACTION_DELETE_CARD({ state,commit }, { objectId, index }) {
       let result;
       try {
-        result = await Axios.delete(`http://start.pongj.com/parse/classes/Card/${objectId}`, {
-          headers: {
-            'X-Parse-Application-Id': '49WFxt4BxWWrCaKCPcHikcwcCLPTiVUc',
-            'X-Parse-JavaScript-Key': '6DDPazgcjh6HaVJ2NJpXDLpPWPYuqpNf',
-          },
-        })
+        result = await axios.delete(`/parse/classes/Card/${objectId}`)
       } catch (error) {
         return new Error(error.response.data);
       }
