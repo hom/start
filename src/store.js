@@ -128,20 +128,6 @@ export default new Vuex.Store({
       cards.splice(index, 1);
       commit('SET_CARDS', cards);
       return result.data.data;
-    }
-    // async ACTION_FETCH_ITEMS({ commit }, objectId) {
-    //   let results;
-    //   try {
-    //     results = await Axios.get('http://start.pongj.com/api/cards', {
-    //       headers: {
-    //         'X-Parse-Application-Id': '49WFxt4BxWWrCaKCPcHikcwcCLPTiVUc',
-    //         'X-Parse-JavaScript-Key': '6DDPazgcjh6HaVJ2NJpXDLpPWPYuqpNf'
-    //       }
-    //     })
-    //   } catch (error) {
-    //     return console.error(error.response.data.error);
-    //   }
-    //   console.log(results.data);
-    // },
+    },
   },
 });
