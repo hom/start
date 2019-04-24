@@ -51,7 +51,8 @@
         class="edit-card-title-input"
         :placeholder="card.title"
         suffix-icon="el-icon-edit"
-        v-model="input1">
+        @blur="handleEditCardTitle"
+        v-model="title">
       </el-input>
     </template>
     <el-tag
@@ -96,14 +97,11 @@ export default {
   data() {
     return {
       form: '',
+      title: '',
       formLabelWidth: '120px',
       isShowAddDialog: false,
       isShowEditDialog: false,
       innerVisible: false,
-      edit: {
-        index: '',
-        mark: '',
-      },
       rules: {
         title: [
           { required: true, message: '请输入标签名称', trigger: 'blur' }
@@ -215,6 +213,29 @@ export default {
 
       this.isShowAddDialog = false;
       this.resetFields();
+    },
+
+    async handleEditCardTitle() {
+      if (!this.title || this.title === this.card.title) {
+        this.title = '';
+        return;
+      }
+      console.log(this.title);
+
+      try {
+        await this.$store.dispatch('ACTION_EDIT_CARD', { objectId: this.card.objectId, title: this.title });
+      } catch (error) {
+        return this.$notify.error({
+          title: '错误',
+          message: '更改标题失败',
+        });
+      }
+
+      this.card.title = this.title;
+      this.$notify.success({
+        title: '成功',
+        message: '更改标题成功',
+      });
     },
 
     resetFields() {
