@@ -1,8 +1,8 @@
 <template>
-  <el-card class="box-card">
+<el-card class="box-card" ref="EL_CARD">
   <div slot="header" class="clearfix">
     <span>{{ card.title }}</span>
-    <!-- <el-button style="float: right; padding: 3px 0" type="text" @click="isShowAddMark = true">添加</el-button> -->
+    <!-- <el-button style="float: right; padding: 3px 0" type="text" @click="isShowAddDialog = true">添加</el-button> -->
     <el-dropdown style="float: right" trigger="click" @command="handleCommand">
       <span class="el-dropdown-link">
         编辑<i class="el-icon-arrow-down el-icon--right"></i>
@@ -19,7 +19,7 @@
   </el-button>
 
   <!-- add mark dialog -->
-  <el-dialog title="添加标签" :visible.sync="isShowAddMark" @close="resetFields">
+  <el-dialog title="添加标签" :visible.sync="isShowAddDialog" @close="resetFields">
     <el-form :model="form" :rules="rules" ref="ADD_MARK_FORM" :label-width="formLabelWidth">
       <el-form-item label="标题" prop="title">
         <el-input v-model="form.title" autocomplete="off"></el-input>
@@ -41,7 +41,37 @@
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="resetFields">重 置</el-button>
-      <el-button type="primary" @click="addMark">确 定</el-button>
+      <el-button type="primary" @click="handleAddMark">确 定</el-button>
+    </div>
+  </el-dialog>
+
+  <el-dialog ref="EDIT_MARK_DIALOG" :visible.sync="isShowEditDialog">
+    <template v-slot:title>
+      <el-input
+        class="edit-card-title-input"
+        :placeholder="card.title"
+        suffix-icon="el-icon-edit"
+        v-model="input1">
+      </el-input>
+    </template>
+    <el-tag
+      class="edit-mark-tag"
+      v-for="(mark, index) in card.marks"
+      :key="index"
+      type="danger"
+      color="#FFFFFF"
+      @close="handleDeleteMark(index, mark)"
+      closable>
+      <div class="favicon"><img :src="mark.favicon" alt=""></div>
+      {{ mark.title }}
+    </el-tag>
+    <el-dialog
+      title="修改"
+      :visible.sync="innerVisible"
+      append-to-body>
+    </el-dialog>
+    <div slot="footer" class="dialog-footer">
+      <el-button type="primary" @click="isShowEditDialog = false">完 成</el-button>
     </div>
   </el-dialog>
 </el-card>
@@ -67,7 +97,13 @@ export default {
     return {
       form: '',
       formLabelWidth: '120px',
-      isShowAddMark: false,
+      isShowAddDialog: false,
+      isShowEditDialog: false,
+      innerVisible: false,
+      edit: {
+        index: '',
+        mark: '',
+      },
       rules: {
         title: [
           { required: true, message: '请输入标签名称', trigger: 'blur' }
@@ -104,13 +140,53 @@ export default {
     },
 
     handleCommand(command) {
-      console.log(command);
       if (command === 'ADD_MARK') {
-        this.isShowAddMark = true;
+        this.isShowAddDialog = true;
+      }
+
+      if (command === 'EDIT_MARK') {
+        this.showEditDialog();
       }
     },
 
-    async addMark() {
+    showEditDialog() {
+      const $card = this.$refs.EL_CARD;
+      const dialog = this.$refs.EDIT_MARK_DIALOG.$el.getElementsByClassName('el-dialog')[0];
+      const position = $card.$el.getBoundingClientRect();
+      dialog.style.width = `${position.width}px`;
+      dialog.style.marginTop = `${position.top}px`;
+      dialog.style.marginLeft = `${position.left}px`;
+      this.isShowEditDialog = true;
+    },
+
+    async handleDeleteMark(index, mark) {
+      try {
+        await this.$confirm('此操作将永久删除该标记, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+      } catch (error) {
+        this.$message(`取消删除${mark.title}`);
+      }
+
+      try {
+        await this.$store.dispatch('ACTION_DELETE_MARK', { ...mark });
+      } catch (error) {
+        return this.$notify.error({
+          title: '错误',
+          message: `删除${mark.title}失败`,
+        });
+      }
+
+      this.card.marks.splice(index, 1);
+      this.$notify.success({
+        title: '成功',
+        message: `删除${mark.title}成功`,
+      });
+    },
+
+    async handleAddMark() {
       try {
         await this.$refs.ADD_MARK_FORM.validate();
       } catch (error) {
@@ -137,9 +213,10 @@ export default {
         message: '新建标签成功',
       });
 
-      this.isShowAddMark = false;
+      this.isShowAddDialog = false;
       this.resetFields();
     },
+
     resetFields() {
       this.$refs.ADD_MARK_FORM.resetFields();
     },
@@ -206,4 +283,20 @@ export default {
     cursor: pointer;
   }
 
+  .edit-card-title-input {
+    width: 30%;
+  }
+
+  .el-button {
+    position: relative;
+  }
+
+  .edit-mark-tag {
+    margin-bottom: 5px;
+    margin-left: 5px;
+    .favicon {
+      line-height: 14px;
+      vertical-align: text-top;
+    }
+  }
 </style>
