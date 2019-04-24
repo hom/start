@@ -3,10 +3,6 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import Axios from 'axios';
 
-console.log(process.env.VUE_APP_BASE_URL);
-console.log(process.env.VUE_APP_PARSE_APPID);
-console.log(process.env.VUE_APP_PARSE_JAVASCRIPT_KEY)
-
 const axios = Axios.create({
   baseURL: process.env.VUE_APP_BASE_URL,
   timeout: 1000,
@@ -15,8 +11,6 @@ const axios = Axios.create({
     'X-Parse-JavaScript-Key': process.env.VUE_APP_PARSE_JAVASCRIPT_KEY
   }
 });
-
-console.log(axios);
 
 Vue.use(Vuex);
 
@@ -61,7 +55,6 @@ export default new Vuex.Store({
     },
 
     async ACTION_ADD_MARK({ commit }, mark) {
-      console.log("TCL: ACTION_ADD_MARK -> mark", mark)
       let card = {
         objectId: mark.card,
         className: 'Card',

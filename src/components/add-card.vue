@@ -50,7 +50,6 @@ export default {
         });
       }
 
-      console.log(result);
       this.$notify.success({
         title: '成功',
         message: '新建面板成功',
@@ -59,7 +58,6 @@ export default {
       this.isShowAddCard = false;
     },
     resetFields() {
-      console.log('reset fields');
       this.$refs.ADD_CARD_FORM.resetFields();
     },
   }
