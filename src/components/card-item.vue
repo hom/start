@@ -10,6 +10,7 @@
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item icon="el-icon-plus" command="ADD_MARK">添加</el-dropdown-item>
         <el-dropdown-item icon="el-icon-edit-outline" command="EDIT_MARK">编辑</el-dropdown-item>
+        <el-dropdown-item icon="el-icon-delete" command="DELETE_CARD">删除</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
   </div>
@@ -125,7 +126,10 @@ export default {
       default() {
         return {};
       },
-    }
+    },
+    index: {
+      type: Number,
+    },
   },
   computed: {
     ...mapState({
@@ -145,6 +149,10 @@ export default {
       if (command === 'EDIT_MARK') {
         this.showEditDialog();
       }
+
+      if (command === 'DELETE_CARD') {
+        this.handleDeleteCard();
+      }
     },
 
     showEditDialog() {
@@ -159,13 +167,13 @@ export default {
 
     async handleDeleteMark(index, mark) {
       try {
-        await this.$confirm('此操作将永久删除该标记, 是否继续?', '提示', {
+        await this.$confirm('此操作将永久删除该标签, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         })
       } catch (error) {
-        this.$message(`取消删除${mark.title}`);
+        return this.$message(`取消删除${mark.title}`);
       }
 
       try {
@@ -204,7 +212,9 @@ export default {
         });
       }
 
-      console.log(result);
+      if (!this.card.marks) {
+        this.card.marks = [];
+      }
       this.card.marks.push(result);
       this.$notify.success({
         title: '成功',
@@ -220,7 +230,6 @@ export default {
         this.title = '';
         return;
       }
-      console.log(this.title);
 
       try {
         await this.$store.dispatch('ACTION_EDIT_CARD', { objectId: this.card.objectId, title: this.title });
@@ -232,9 +241,44 @@ export default {
       }
 
       this.card.title = this.title;
+      this.title = '';
       this.$notify.success({
         title: '成功',
         message: '更改标题成功',
+      });
+    },
+
+    async handleDeleteCard() {
+      try {
+        await this.$confirm('此操作将永久删除该列表, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+      } catch (error) {
+        return this.$message(`取消删除${this.card.title}`);
+      }
+
+      if (this.card.marks && this.card.marks.length > 0) {
+        return this.$notify.error({
+          title: '错误',
+          message: '只能删除空列表',
+        });
+      }
+
+      try {
+        await this.$store.dispatch('ACTION_DELETE_CARD', { objectId: this.card.objectId, index: this.index });
+      } catch (error) {
+        console.error(error);
+        return this.$notify.error({
+          title: '错误',
+          message: '删除列表失败',
+        });
+      }
+
+      this.$notify.success({
+        title: '成功',
+        message: '删除列表成功',
       });
     },
 

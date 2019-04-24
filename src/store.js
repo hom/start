@@ -109,6 +109,25 @@ export default new Vuex.Store({
       }
 
       return result.data.data;
+    },
+
+    async ACTION_DELETE_CARD({ state,commit }, { objectId, index }) {
+      let result;
+      try {
+        result = await Axios.delete(`http://start.pongj.com/parse/classes/Card/${objectId}`, {
+          headers: {
+            'X-Parse-Application-Id': '49WFxt4BxWWrCaKCPcHikcwcCLPTiVUc',
+            'X-Parse-JavaScript-Key': '6DDPazgcjh6HaVJ2NJpXDLpPWPYuqpNf',
+          },
+        })
+      } catch (error) {
+        return new Error(error.response.data);
+      }
+
+      let cards = state.cards;
+      cards.splice(index, 1);
+      commit('SET_CARDS', cards);
+      return result.data.data;
     }
     // async ACTION_FETCH_ITEMS({ commit }, objectId) {
     //   let results;

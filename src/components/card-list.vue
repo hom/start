@@ -1,6 +1,6 @@
 <template>
   <el-main class="card-list">
-    <CardItem v-for="(card, key) of cards" :key="key" :card="card" />
+    <CardItem v-for="(card, key) of cards" :key="key" :card="card" :index="key" />
     <AddCard />
   </el-main>
 </template>
