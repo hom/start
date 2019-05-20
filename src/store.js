@@ -28,15 +28,20 @@ export default new Vuex.Store({
   },
   actions: {
     async ACTION_FETCH_CARDS({ commit }) {
+      let params = {
+        order: 'sort'
+      }
       let results;
       try {
-        results = await axios.get('/api/cards')
+        results = await axios.get('/api/cards', {
+          params,
+        })
       } catch (error) {
         console.error(error);
         return console.error(error.response.data.error);
       }
 
-      commit('SET_CARDS', results.data.data);
+      commit('SET_CARDS', results.data.data.sort((a, b) => a.sort - b.sort));
     },
     
     async ACTION_ADD_CARD({ state, commit }, card) {

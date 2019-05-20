@@ -40,9 +40,8 @@ export default {
         });
       }
 
-      let result;
       try {
-        result = await this.$store.dispatch('ACTION_ADD_CARD', { ...this.form });
+        await this.$store.dispatch('ACTION_ADD_CARD', { ...this.form });
       } catch (error) {
         return this.$notify.error({
           title: '错误',
