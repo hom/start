@@ -41,7 +41,7 @@ export default new Vuex.Store({
         return console.error(error.response.data.error);
       }
 
-      commit('SET_CARDS', results.data.data.sort((a, b) => a.sort - b.sort));
+      commit('SET_CARDS', results.data.data);
     },
     
     async ACTION_ADD_CARD({ state, commit }, card) {
