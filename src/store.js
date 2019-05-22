@@ -1,15 +1,7 @@
 /* eslint-disable */
 import Vue from 'vue';
 import Vuex from 'vuex';
-import Axios from 'axios';
-
-const axios = Axios.create({
-  baseURL: process.env.VUE_APP_BASE_URL,
-  headers: {
-    'X-Parse-Application-Id': process.env.VUE_APP_PARSE_APPID,
-    'X-Parse-JavaScript-Key': process.env.VUE_APP_PARSE_JAVASCRIPT_KEY
-  }
-});
+import api from '@/api';
 
 Vue.use(Vuex);
 
@@ -33,7 +25,7 @@ export default new Vuex.Store({
       }
       let results;
       try {
-        results = await axios.get('/api/cards', {
+        results = await api.get('/api/cards', {
           params,
         })
       } catch (error) {
@@ -47,7 +39,7 @@ export default new Vuex.Store({
     async ACTION_ADD_CARD({ state, commit }, card) {
       let result;
       try {
-        result = await axios.post('/api/card', card)
+        result = await api.post('/api/card', card)
       } catch (error) {
         return new Error(error.response.data);
       }
@@ -69,7 +61,7 @@ export default new Vuex.Store({
 
       let result;
       try {
-        result = await axios.post('/api/mark', mark)
+        result = await api.post('/api/mark', mark)
       } catch (error) {
         console.error(error);
         return new Error(error.response.data);
@@ -81,7 +73,7 @@ export default new Vuex.Store({
     async ACTION_DELETE_MARK({ commit }, mark) {
       let result;
       try {
-        result = await axios.delete(`/parse/classes/Mark/${mark.objectId}`)
+        result = await api.delete(`/parse/classes/Mark/${mark.objectId}`)
       } catch (error) {
         console.error(error);
         return new Error(error.response.data);
@@ -93,7 +85,7 @@ export default new Vuex.Store({
     async ACTION_EDIT_CARD({ commit }, { objectId, title }) {
       let result;
       try {
-        result = await axios.put(`/parse/classes/Card/${objectId}`, { title })
+        result = await api.put(`/parse/classes/Card/${objectId}`, { title })
       } catch (error) {
         return new Error(error.response.data);
       }
@@ -104,7 +96,7 @@ export default new Vuex.Store({
     async ACTION_DELETE_CARD({ state,commit }, { objectId, index }) {
       let result;
       try {
-        result = await axios.delete(`/parse/classes/Card/${objectId}`)
+        result = await api.delete(`/parse/classes/Card/${objectId}`)
       } catch (error) {
         return new Error(error.response.data);
       }
