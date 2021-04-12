@@ -1,4 +1,5 @@
 module.exports = {
+  publicPath: '/www/start/dist/',
   configureWebpack: {
     externals: {
       vue: 'Vue',
